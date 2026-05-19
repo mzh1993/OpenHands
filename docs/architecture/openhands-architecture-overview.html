@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenHands 架构与产品全景</title>
+    <style>
+      :root {
+        --bg: #f6efe4;
+        --paper: rgba(255, 252, 246, 0.88);
+        --paper-solid: #fffdf8;
+        --panel: #f6f0e5;
+        --ink: #18201f;
+        --muted: #5a645f;
+        --line: #d9cfbf;
+        --accent: #0f766e;
+        --accent-strong: #0a5e57;
+        --accent-soft: rgba(15, 118, 110, 0.1);
+        --copper: #bd6b36;
+        --shadow: 0 18px 60px rgba(24, 32, 31, 0.09);
+        --radius-xl: 30px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --max-width: 1440px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 0% 0%, rgba(15, 118, 110, 0.18), transparent 26%),
+          radial-gradient(circle at 100% 0%, rgba(189, 107, 54, 0.16), transparent 24%),
+          linear-gradient(180deg, #f8f2e8 0%, #f2ebdf 100%);
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      .page {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 22px;
+        display: grid;
+        grid-template-columns: 290px minmax(0, 1fr);
+        gap: 26px;
+      }
+
+      .nav {
+        position: sticky;
+        top: 22px;
+        align-self: start;
+        background: rgba(255, 252, 246, 0.82);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(217, 207, 191, 0.85);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        padding: 22px 20px;
+      }
+
+      .nav h1 {
+        margin: 0 0 10px;
+        font-size: 1.5rem;
+        line-height: 1.08;
+      }
+
+      .nav p {
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 0.95rem;
+      }
+
+      .nav-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--ink);
+        padding: 10px 12px;
+        border-radius: 12px;
+        transition: background 140ms ease, transform 140ms ease;
+      }
+
+      .nav-links a:hover {
+        background: var(--accent-soft);
+        transform: translateX(2px);
+      }
+
+      .nav-note {
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.65;
+      }
+
+      main {
+        display: grid;
+        gap: 24px;
+      }
+
+      section,
+      header.hero {
+        background: var(--paper);
+        border: 1px solid rgba(217, 207, 191, 0.86);
+        border-radius: 34px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .hero {
+        padding: 40px;
+        background:
+          linear-gradient(140deg, rgba(15, 118, 110, 0.1), rgba(255, 252, 246, 0.52)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(246, 240, 229, 0.96));
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+      }
+
+      .hero h2 {
+        margin: 16px 0 16px;
+        font-size: clamp(2.1rem, 4vw, 4.4rem);
+        line-height: 0.95;
+        max-width: 10em;
+      }
+
+      .hero .lead {
+        max-width: 62rem;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.8;
+        margin: 0;
+      }
+
+      .hero-grid {
+        margin-top: 26px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 18px;
+      }
+
+      .hero-quote,
+      .hero-snapshot,
+      .panel,
+      .card,
+      .mini-card,
+      .story-step {
+        background: var(--paper-solid);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+      }
+
+      .hero-quote {
+        padding: 22px 24px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .hero-quote strong {
+        font-size: 1.08rem;
+      }
+
+      .hero-quote p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .hero-snapshot {
+        padding: 18px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .mini-card {
+        padding: 16px;
+      }
+
+      .mini-card strong {
+        display: block;
+        font-size: 1.55rem;
+        margin-bottom: 6px;
+      }
+
+      .mini-card span {
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: 0.92rem;
+      }
+
+      section {
+        padding: 30px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+        align-items: end;
+        margin-bottom: 22px;
+      }
+
+      .section-head h3 {
+        margin: 8px 0 0;
+        font-size: 1.3rem;
+      }
+
+      .section-head p {
+        margin: 0;
+        max-width: 56rem;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .tour-grid,
+      .map-grid,
+      .entry-grid,
+      .docs-grid,
+      .myth-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .tour-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .map-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .entry-grid,
+      .myth-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .docs-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .card h4 {
+        margin: 0 0 8px;
+        font-size: 1.06rem;
+      }
+
+      .card p,
+      .card li,
+      .panel p,
+      .panel li,
+      .story-step p,
+      .module-copy p,
+      .module-copy li {
+        color: var(--muted);
+        line-height: 1.72;
+      }
+
+      .card p,
+      .panel p,
+      .story-step p {
+        margin: 0;
+      }
+
+      .card ul,
+      .panel ul,
+      .module-copy ul {
+        margin: 12px 0 0;
+        padding-left: 18px;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        font-size: 0.84rem;
+      }
+
+      .tour-card .label,
+      .story-step .label,
+      .module-card .label {
+        display: inline-block;
+        color: var(--copper);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .diagram {
+        margin-top: 22px;
+        padding: 18px;
+        background: linear-gradient(180deg, #fbf7ef 0%, #f3eadc 100%);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        overflow: auto;
+      }
+
+      svg {
+        width: 100%;
+        height: auto;
+      }
+
+      .story-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .story-step {
+        padding: 18px;
+      }
+
+      .story-step strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1rem;
+      }
+
+      .module-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .module-card {
+        padding: 22px;
+        display: grid;
+        grid-template-columns: 230px 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .module-card h4 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+
+      .module-copy {
+        display: grid;
+        gap: 10px;
+      }
+
+      .module-copy p {
+        margin: 0;
+      }
+
+      .route {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.08);
+        color: var(--accent-strong);
+        font-weight: 700;
+        font-size: 0.86rem;
+      }
+
+      .footer-note {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.72;
+      }
+
+      code {
+        padding: 0.12rem 0.38rem;
+        border-radius: 0.4rem;
+        background: var(--panel);
+        border: 1px solid rgba(217, 207, 191, 0.9);
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.92em;
+      }
+
+      @media (max-width: 1180px) {
+        .page {
+          grid-template-columns: 1fr;
+        }
+
+        .nav {
+          position: static;
+        }
+
+        .hero-grid,
+        .docs-grid,
+        .module-card {
+          grid-template-columns: 1fr;
+        }
+
+        .tour-grid,
+        .story-grid,
+        .entry-grid,
+        .myth-grid,
+        .stat-grid,
+        .map-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 14px;
+        }
+
+        section,
+        .hero {
+          padding: 22px;
+        }
+
+        .tour-grid,
+        .story-grid,
+        .entry-grid,
+        .myth-grid,
+        .stat-grid,
+        .map-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero h2 {
+          max-width: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <aside class="nav">
+        <h1>OpenHands 架构全景</h1>
+        <p>先用人话讲清楚第一次打开能做什么，再逐层拆解主仓、SDK、Benchmarks 和核心模块的关系。</p>
+        <div class="nav-links">
+          <a href="#hero">先看结论</a>
+          <a href="#tour">第一次打开能做什么</a>
+          <a href="#map">产品版图</a>
+          <a href="#ecosystem">谁把它做成了产品</a>
+          <a href="#repo">主仓边界</a>
+          <a href="#flow">一次会话如何流动</a>
+          <a href="#modules">核心模块</a>
+          <a href="#entry">从哪里体验</a>
+          <a href="#docs">文档地图</a>
+          <a href="#myths">常见误解</a>
+        </div>
+        <div class="nav-note">
+          适合第一次接触 OpenHands 的人：
+          先理解“这个产品怎么用”，再理解“背后系统怎么拼起来”。
+        </div>
+      </aside>
+
+      <main>
+        <header class="hero" id="hero">
+          <span class="eyebrow">OpenHands Explained</span>
+          <h2>它不是一个神秘黑盒，也不只是一个 benchmark harness。</h2>
+          <p class="lead">
+            更准确地说，<code>software-agent-sdk</code> 是 OpenHands 的能力底座，当前主仓是把这些能力做成 GUI、Cloud、Enterprise 的应用层，而
+            <code>OpenHands/benchmarks</code> 则是独立的评测 harness。第一次接触时，最重要的不是背目录，而是先知道“我进来能做什么”，以及“这个仓库到底管什么”。
+          </p>
+
+          <div class="hero-grid">
+            <div class="hero-quote">
+              <strong>一句话心智模型</strong>
+              <p>OpenHands 更像一个带执行环境的 AI 软件工程工作区：你在 Chat 里下任务，它在 sandbox 里做事，再通过 Terminal、Changes、Browser、VS Code 等面板把过程和结果展示给你。</p>
+            </div>
+            <div class="hero-snapshot">
+              <div class="stat-grid">
+                <div class="mini-card">
+                  <strong>3 层</strong>
+                  <span>产品层、能力层、评测层</span>
+                </div>
+                <div class="mini-card">
+                  <strong>2 个外部核心仓</strong>
+                  <span>SDK 与 Benchmarks 不在主仓内部</span>
+                </div>
+                <div class="mini-card">
+                  <strong>1 个主应用仓</strong>
+                  <span>当前仓库承载 GUI、app server、enterprise 扩展</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section id="tour">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">60 Seconds Tour</span>
+              <h3>第一次打开 OpenHands，你会看到什么</h3>
+            </div>
+            <p>先别急着看源码。先把它想成一个“会下指令、会执行、会展示过程”的工作区，而不是一个单纯聊天框。</p>
+          </div>
+
+          <div class="tour-grid">
+            <div class="card tour-card">
+              <span class="label">Chat</span>
+              <h4>你告诉它要做什么</h4>
+              <p>在这里输入任务、目标、约束和补充说明。这里不是最终结果页，而是你和 agent 的工作入口。</p>
+            </div>
+            <div class="card tour-card">
+              <span class="label">Changes</span>
+              <h4>你检查它到底改了什么</h4>
+              <p>如果它声称修了 bug、加了功能、更新了页面，你会在这里看到文件差异和代码变更。</p>
+            </div>
+            <div class="card tour-card">
+              <span class="label">Terminal</span>
+              <h4>你确认它有没有真的跑起来</h4>
+              <p>命令执行和输出在这里最直观。它是 OpenHands 不只是“会说”，而是真的“会做”的关键证据。</p>
+            </div>
+            <div class="card tour-card">
+              <span class="label">VS Code</span>
+              <h4>你把工程当项目看</h4>
+              <p>当任务涉及多文件或复杂目录时，这里帮助你像看一个真实代码库那样浏览工作区。</p>
+            </div>
+            <div class="card tour-card">
+              <span class="label">Browser / App</span>
+              <h4>你直接看运行结果</h4>
+              <p>如果任务生成了网页、启动了应用或改了前端，这里能直接看到活的页面，而不是只看文字描述。</p>
+            </div>
+            <div class="card tour-card">
+              <span class="label">Planner</span>
+              <h4>你了解它准备怎么做</h4>
+              <p>在某些模式下，OpenHands 会先展示计划或步骤分解，让你在执行前先判断方向对不对。</p>
+            </div>
+          </div>
+
+          <div class="diagram">
+            <svg viewBox="0 0 1120 320" role="img" aria-label="OpenHands first-time tour">
+              <rect x="40" y="34" width="1040" height="250" rx="30" fill="#fffdf8" stroke="#d9cfbf" stroke-width="2"></rect>
+              <rect x="78" y="72" width="186" height="176" rx="22" fill="#f5efe5"></rect>
+              <text x="171" y="118" text-anchor="middle" font-size="24" fill="#18201f" font-weight="700">Chat</text>
+              <text x="171" y="148" text-anchor="middle" font-size="15" fill="#5a645f">说清任务</text>
+
+              <rect x="292" y="72" width="186" height="176" rx="22" fill="#0f766e"></rect>
+              <text x="385" y="118" text-anchor="middle" font-size="24" fill="#fff" font-weight="700">Terminal</text>
+              <text x="385" y="148" text-anchor="middle" font-size="15" fill="#dff3f1">确认它真的执行了</text>
+
+              <rect x="506" y="72" width="186" height="176" rx="22" fill="#f5efe5"></rect>
+              <text x="599" y="118" text-anchor="middle" font-size="24" fill="#18201f" font-weight="700">Changes</text>
+              <text x="599" y="148" text-anchor="middle" font-size="15" fill="#5a645f">核对它改了什么</text>
+
+              <rect x="720" y="72" width="160" height="176" rx="22" fill="#f5efe5"></rect>
+              <text x="800" y="118" text-anchor="middle" font-size="24" fill="#18201f" font-weight="700">Browser</text>
+              <text x="800" y="148" text-anchor="middle" font-size="15" fill="#5a645f">看运行结果</text>
+
+              <rect x="908" y="72" width="132" height="176" rx="22" fill="#f5efe5"></rect>
+              <text x="974" y="118" text-anchor="middle" font-size="24" fill="#18201f" font-weight="700">VS Code</text>
+              <text x="974" y="148" text-anchor="middle" font-size="15" fill="#5a645f">看工程结构</text>
+
+              <line x1="264" y1="160" x2="292" y2="160" stroke="#bd6b36" stroke-width="4"></line>
+              <line x1="478" y1="160" x2="506" y2="160" stroke="#bd6b36" stroke-width="4"></line>
+              <line x1="692" y1="160" x2="720" y2="160" stroke="#bd6b36" stroke-width="4"></line>
+              <line x1="880" y1="160" x2="908" y2="160" stroke="#bd6b36" stroke-width="4"></line>
+            </svg>
+          </div>
+        </section>
+
+        <section id="map">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Product Map</span>
+              <h3>OpenHands 到底有哪些进入方式</h3>
+            </div>
+            <p>官方文档和 README 共同说明，OpenHands 对外不是单一路径，而是围绕同一套 agent 能力展开的多种入口。</p>
+          </div>
+
+          <div class="map-grid">
+            <div class="card">
+              <h4>OpenHands Software Agent SDK</h4>
+              <p>底层能力最集中的地方。官方明确把它定义为 “all of our agentic tech”。</p>
+              <div class="badge-row">
+                <span class="badge">底座</span>
+                <span class="badge">Python Library</span>
+                <span class="badge">外部仓库</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>OpenHands CLI</h4>
+              <p>给喜欢终端工作流的人使用，体验更像 Claude Code / Codex。</p>
+              <div class="badge-row">
+                <span class="badge">开发者入口</span>
+                <span class="badge">外部仓库</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>OpenHands Local GUI</h4>
+              <p>当前主仓最直接对应的产品形态。你在浏览器里看到的主要界面，就是这层。</p>
+              <div class="badge-row">
+                <span class="badge">当前主仓</span>
+                <span class="badge">Web App</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>OpenHands Cloud</h4>
+              <p>官方托管版 GUI，适合最快体验完整产品，不需要先本地部署。</p>
+              <div class="badge-row">
+                <span class="badge">Hosted</span>
+                <span class="badge">Product</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>OpenHands Enterprise</h4>
+              <p>给企业部署需求准备的扩展层，覆盖认证、组织、多用户、权限与外部集成。</p>
+              <div class="badge-row">
+                <span class="badge">当前主仓</span>
+                <span class="badge">Source-available</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>OpenHands Benchmarks</h4>
+              <p>独立的 evaluation / benchmark harness，用于评测 agent 表现，而不是当前主仓内部模块。</p>
+              <div class="badge-row">
+                <span class="badge">评测层</span>
+                <span class="badge">外部仓库</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="ecosystem">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Productization Evidence</span>
+              <h3>谁把 OpenHands 做成了产品</h3>
+            </div>
+            <p>为了避免把热度传闻写成事实，这里只收录有明确 OpenHands / OpenHands SDK 关系，并且带真实产品页、市场页、文档页或 repo 入口的公开案例。</p>
+          </div>
+
+          <div class="entry-grid">
+            <div class="card">
+              <h4>OpenHands 自己已经产品化</h4>
+              <p>Cloud、Self-hosted Cloud 和 Enterprise 都是明确的产品信号，不再只是“开源仓库 + README”。</p>
+              <ul>
+                <li><a href="https://www.openhands.dev/blog/introducing-the-openhands-cloud">OpenHands Cloud launch</a></li>
+                <li><a href="https://www.openhands.dev/blog/openhands-cloud-self-hosted-secure-convenient-deployment-of-ai-software-development-agents">Self-hosted Cloud</a></li>
+                <li><a href="https://docs.openhands.dev/enterprise">Enterprise docs</a></li>
+                <li><a href="https://www.openhands.dev/blog/openhands-enterprise-agent-control-plane">Enterprise launch</a></li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>大企业 / 大公司侧信号</h4>
+              <p>这些案例说明 OpenHands 已经进入较大组织的技术传播、平台集成和企业治理语境。</p>
+              <ul>
+                <li><a href="https://www.amd.com/en/developer/resources/technical-articles/2025/OpenHands.html">AMD technical article</a></li>
+                <li><a href="https://c3.ai/blog/autonomous-coding-agents-beyond-developer-productivity/">C3 AI blog</a></li>
+                <li><a href="https://mlflow.org/blog/mlflow-openhands">MLflow / Databricks blog</a></li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>中小企业 / 创业团队</h4>
+              <p>这类案例更贴近“怎么把 OpenHands 接进现有产品或包装成商业方案”。</p>
+              <ul>
+                <li><a href="https://openhands.daytona.io/">Daytona OpenHands</a></li>
+                <li><a href="https://docs.testchimp.io/integrations/openhands/">TestChimp integration</a></li>
+                <li><a href="https://marketplace.microsoft.com/en-us/product/saas/lynxroute.openhands?tab=overview">Lynxroute Azure Marketplace</a></li>
+                <li><a href="https://www.spheron.network/blog/deploy-openhands-gpu-cloud/">Spheron deployment guide</a></li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>微型团队 / 个人二开产品</h4>
+              <p>这些案例最能回答“个人或小团队能不能把 OpenHands 做成真正的产品或可分发工具”。</p>
+              <ul>
+                <li><a href="https://www.omoios.dev/">OmoiOS</a> / <a href="https://github.com/kivo360/OmoiOS">repo</a></li>
+                <li><a href="https://opensymphony.dev/">OpenSymphony</a> / <a href="https://github.com/kumanday/OpenSymphony">repo</a></li>
+                <li><a href="https://thesis.io/">Thesis</a> / <a href="https://github.com/oraichain/Thesis">repo</a></li>
+                <li><a href="https://github.com/marketplace/actions/openhands-ai-action">OpenHands AI Action</a></li>
+                <li><a href="https://github.com/zxkane/openhands-infra">openhands-infra</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panel card">
+            <h4>这组证据最值得读出的三件事</h4>
+            <ul>
+              <li>OpenHands 自己已经从开源项目演化出明确的 Cloud / Self-hosted / Enterprise 产品形态。</li>
+              <li>它已经进入大企业与 B2B 平台集成语境，不再只是开发者社区实验品。</li>
+              <li>个人和微型团队也已经能把它二次开发成独立产品、市场组件或可复用基础设施方案。</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="repo">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Repo Boundary</span>
+              <h3>当前主仓到底负责什么</h3>
+            </div>
+            <p>如果 SDK 是引擎，这个仓库更像把引擎接成完整产品的应用层与协调层。</p>
+          </div>
+
+          <div class="panel card">
+            <h4>主仓的定位</h4>
+            <ul>
+              <li>把 SDK 能力暴露成 Web 应用可调用的 API、事件流、会话和配置体系。</li>
+              <li>提供 GUI：首页、会话页、设置页、共享页、组织相关页面。</li>
+              <li>串联 sandbox、conversation、event、settings、integrations 和 enterprise 扩展。</li>
+            </ul>
+          </div>
+
+          <div class="diagram">
+            <svg viewBox="0 0 1100 360" role="img" aria-label="OpenHands architecture layers">
+              <rect x="420" y="24" width="260" height="72" rx="22" fill="#0f766e"></rect>
+              <text x="550" y="67" text-anchor="middle" font-size="28" fill="#fff" font-weight="700">OpenHands</text>
+
+              <rect x="60" y="146" width="294" height="92" rx="22" fill="#fffdf8" stroke="#d9cfbf" stroke-width="2"></rect>
+              <text x="207" y="184" text-anchor="middle" font-size="24" fill="#18201f" font-weight="700">software-agent-sdk</text>
+              <text x="207" y="212" text-anchor="middle" font-size="15" fill="#5a645f">agent foundation / runtime / sandbox base</text>
+
+              <rect x="403" y="146" width="294" height="92" rx="22" fill="#fffdf8" stroke="#d9cfbf" stroke-width="2"></rect>
+              <text x="550" y="184" text-anchor="middle" font-size="24" fill="#18201f" font-weight="700">当前主仓 OpenHands</text>
+              <text x="550" y="212" text-anchor="middle" font-size="15" fill="#5a645f">GUI + app server + enterprise extensions</text>
+
+              <rect x="746" y="146" width="294" height="92" rx="22" fill="#fffdf8" stroke="#d9cfbf" stroke-width="2"></rect>
+              <text x="893" y="184" text-anchor="middle" font-size="24" fill="#18201f" font-weight="700">OpenHands/benchmarks</text>
+              <text x="893" y="212" text-anchor="middle" font-size="15" fill="#5a645f">evaluation / benchmark harness</text>
+
+              <line x1="550" y1="96" x2="207" y2="146" stroke="#0f766e" stroke-width="3"></line>
+              <line x1="550" y1="96" x2="550" y2="146" stroke="#0f766e" stroke-width="3"></line>
+              <line x1="550" y1="96" x2="893" y2="146" stroke="#0f766e" stroke-width="3"></line>
+
+              <rect x="140" y="278" width="190" height="58" rx="18" fill="#f6f0e5" stroke="#d9cfbf"></rect>
+              <text x="235" y="313" text-anchor="middle" font-size="22" fill="#18201f">CLI</text>
+
+              <rect x="455" y="278" width="190" height="58" rx="18" fill="#f6f0e5" stroke="#d9cfbf"></rect>
+              <text x="550" y="313" text-anchor="middle" font-size="22" fill="#18201f">Local GUI / Cloud</text>
+
+              <rect x="770" y="278" width="190" height="58" rx="18" fill="#f6f0e5" stroke="#d9cfbf"></rect>
+              <text x="865" y="313" text-anchor="middle" font-size="22" fill="#18201f">Enterprise</text>
+
+              <line x1="207" y1="238" x2="235" y2="278" stroke="#bd6b36" stroke-width="3"></line>
+              <line x1="550" y1="238" x2="550" y2="278" stroke="#bd6b36" stroke-width="3"></line>
+              <line x1="550" y1="238" x2="865" y2="278" stroke="#bd6b36" stroke-width="3"></line>
+            </svg>
+          </div>
+        </section>
+
+        <section id="flow">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Conversation Flow</span>
+              <h3>一次会话是怎么跑起来的</h3>
+            </div>
+            <p>理解 OpenHands 最好的方法，不是先背目录，而是沿着一次真实任务从界面走到执行环境，再走回结果展示。</p>
+          </div>
+
+          <div class="story-grid">
+            <div class="story-step">
+              <span class="label">Step 1</span>
+              <strong>你进入界面</strong>
+              <p>前端先知道当前部署模式、有哪些 provider、哪些功能被启用，以及你的基础设置是什么。</p>
+            </div>
+            <div class="story-step">
+              <span class="label">Step 2</span>
+              <strong>你创建 conversation</strong>
+              <p>conversation 是“一次任务的主档案”。系统后续所有状态、事件和执行环境都会围绕它组织。</p>
+            </div>
+            <div class="story-step">
+              <span class="label">Step 3</span>
+              <strong>app server 串起上下文</strong>
+              <p>它把用户、settings、secrets、conversation、sandbox 入口和事件流通道拼成一次可运行任务。</p>
+            </div>
+            <div class="story-step">
+              <span class="label">Step 4</span>
+              <strong>sandbox 真正干活</strong>
+              <p>执行命令、改文件、跑应用、操作仓库，都发生在隔离执行环境里。</p>
+            </div>
+            <div class="story-step">
+              <span class="label">Step 5</span>
+              <strong>event 记录过程</strong>
+              <p>系统把运行中的状态、动作和输出组织成事件，让这些过程可以被展示、回放和共享。</p>
+            </div>
+            <div class="story-step">
+              <span class="label">Step 6</span>
+              <strong>前端持续同步</strong>
+              <p>WebSocket 和查询层把运行中的变化持续送回 Chat、Terminal、Changes 等面板，而不是最后一次性展示。</p>
+            </div>
+            <div class="story-step">
+              <span class="label">Step 7</span>
+              <strong>你检查结果</strong>
+              <p>你在 Chat 看解释，在 Terminal 看执行，在 Changes 看差异，在 Browser / App 看运行结果。</p>
+            </div>
+            <div class="story-step">
+              <span class="label">Step 8</span>
+              <strong>结果回到工作流</strong>
+              <p>在 Cloud / Enterprise 场景中，结果还能继续接回 GitHub、GitLab、Slack、Jira、Linear 等系统。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="modules">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Core Modules</span>
+              <h3>核心模块拆解：把术语翻译成人话</h3>
+            </div>
+            <p>每个模块都用同一套问题来解释：它是什么、你什么时候会遇到它、为什么它关键。</p>
+          </div>
+
+          <div class="module-stack">
+            <div class="panel module-card">
+              <div>
+                <span class="label">Conversation Layer</span>
+                <h4><code>app_conversation/</code></h4>
+                <span class="route">任务主线管理</span>
+              </div>
+              <div class="module-copy">
+                <p><strong>它是什么：</strong>会话管理层。</p>
+                <p><strong>你什么时候会遇到它：</strong>创建任务、打开历史会话、共享会话、恢复会话时。</p>
+                <p><strong>为什么它关键：</strong>它把“用户眼里的一次任务”变成系统里能跟踪、能恢复、能共享的主线。</p>
+              </div>
+            </div>
+
+            <div class="panel module-card">
+              <div>
+                <span class="label">Execution Layer</span>
+                <h4><code>sandbox/</code></h4>
+                <span class="route">隔离执行环境</span>
+              </div>
+              <div class="module-copy">
+                <p><strong>它是什么：</strong>隔离执行环境管理层。</p>
+                <p><strong>你什么时候会遇到它：</strong>agent 需要跑命令、改文件、启动项目、访问运行环境时。</p>
+                <p><strong>为什么它关键：</strong>没有它，OpenHands 只能“说”，很难真正“做”。</p>
+              </div>
+            </div>
+
+            <div class="panel module-card">
+              <div>
+                <span class="label">Observation Layer</span>
+                <h4><code>event/</code></h4>
+                <span class="route">把执行过程变成可展示过程</span>
+              </div>
+              <div class="module-copy">
+                <p><strong>它是什么：</strong>事件存储和流转层。</p>
+                <p><strong>你什么时候会遇到它：</strong>界面里出现状态更新、输出流、会话回放和共享内容时。</p>
+                <p><strong>为什么它关键：</strong>因为 OpenHands 需要把“运行过程”变成“可观察过程”。</p>
+              </div>
+            </div>
+
+            <div class="panel module-card">
+              <div>
+                <span class="label">Configuration Layer</span>
+                <h4><code>settings/</code> + <code>secrets/</code></h4>
+                <span class="route">配置和凭据管理</span>
+              </div>
+              <div class="module-copy">
+                <p><strong>它们是什么：</strong>模型配置、用户设置、应用设置和敏感信息管理层。</p>
+                <p><strong>你什么时候会遇到它们：</strong>填 API key、配模型、切开关、管理应用行为时。</p>
+                <p><strong>为什么它们关键：</strong>产品不能靠写死配置运行，尤其还要支持 Local GUI、Cloud 和 Enterprise。</p>
+              </div>
+            </div>
+
+            <div class="panel module-card">
+              <div>
+                <span class="label">Identity Layer</span>
+                <h4><code>user/</code> + <code>services/</code></h4>
+                <span class="route">身份与上下文</span>
+              </div>
+              <div class="module-copy">
+                <p><strong>它们是什么：</strong>用户身份、用户上下文和辅助服务层。</p>
+                <p><strong>你什么时候会遇到它们：</strong>登录、访问控制、provider token 关联、sandbox 访问控制时。</p>
+                <p><strong>为什么它们关键：</strong>系统必须知道“谁在发起请求、谁能访问哪些能力”。</p>
+              </div>
+            </div>
+
+            <div class="panel module-card">
+              <div>
+                <span class="label">Front-end Boot Layer</span>
+                <h4><code>web_client/</code></h4>
+                <span class="route">前端启动配置</span>
+              </div>
+              <div class="module-copy">
+                <p><strong>它是什么：</strong>前端启动配置层。</p>
+                <p><strong>你什么时候会遇到它：</strong>一打开前端，系统就要知道当前是 OSS 还是 SaaS、有哪些 provider、哪些功能启用。</p>
+                <p><strong>为什么它关键：</strong>它决定前端一开始怎么呈现自己。</p>
+              </div>
+            </div>
+
+            <div class="panel module-card">
+              <div>
+                <span class="label">Workflow Integration</span>
+                <h4><code>integrations/</code> + <code>enterprise/</code></h4>
+                <span class="route">接入真实协作系统</span>
+              </div>
+              <div class="module-copy">
+                <p><strong>它们是什么：</strong>外部系统集成与企业扩展层。</p>
+                <p><strong>你什么时候会遇到它们：</strong>当你希望 agent 与 GitHub、GitLab、Slack、Jira、Linear 或组织级能力结合时。</p>
+                <p><strong>为什么它们关键：</strong>因为 OpenHands 的目标不是孤立运行，而是接回真实团队工作流。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="entry">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Experience Paths</span>
+              <h3>从哪里可以体验 OpenHands</h3>
+            </div>
+            <p>不同入口对应不同人群。第一次接触时，最重要的是选对入口，而不是一上来就读最底层实现。</p>
+          </div>
+
+          <div class="entry-grid">
+            <div class="card">
+              <h4>最快体验：OpenHands Cloud</h4>
+              <p>官方托管入口，适合最快体验完整产品，不需要先本地部署。</p>
+              <div class="badge-row">
+                <span class="badge"><a href="https://app.all-hands.dev">app.all-hands.dev</a></span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>最贴近当前主仓：Local GUI</h4>
+              <p>根据 `Development.md` 和 `Makefile`，典型路径是 <code>make build</code>、<code>make run</code> 或分别启动前后端。</p>
+              <div class="badge-row">
+                <span class="badge"><code>make start-backend</code></span>
+                <span class="badge"><code>make start-frontend</code></span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>更偏工具使用：CLI</h4>
+              <p>如果你关心的是命令行里的 agent 体验，而不是 GUI，应该直接看 CLI 文档和外部源码仓。</p>
+            </div>
+            <div class="card">
+              <h4>更偏平台接入：SDK</h4>
+              <p>如果你的目标是把 OpenHands 接入自己的系统，而不是直接用产品界面，那应该直接看 SDK。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="docs">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Docs Map</span>
+              <h3>现有架构文档和使用指南看哪里</h3>
+            </div>
+            <p>现有资料并不少，问题是分散在主仓文档、官方站点和外部相关仓里。</p>
+          </div>
+
+          <div class="docs-grid">
+            <div class="panel card">
+              <h4>当前主仓内部先读这些</h4>
+              <ul>
+                <li><code>README.md</code></li>
+                <li><code>Development.md</code></li>
+                <li><code>frontend/README.md</code></li>
+                <li><code>openhands/app_server/README.md</code></li>
+                <li><code>openhands/app_server/sandbox/README.md</code></li>
+                <li><code>openhands/app_server/app_conversation/README.md</code></li>
+                <li><code>openhands/app_server/event/README.md</code></li>
+                <li><code>skills/README.md</code></li>
+                <li><code>enterprise/doc/architecture/*</code></li>
+              </ul>
+            </div>
+
+            <div class="panel card">
+              <h4>官方站点与外部仓</h4>
+              <ul>
+                <li><a href="https://docs.openhands.dev/overview/introduction">Introduction</a></li>
+                <li><a href="https://docs.openhands.dev/openhands/usage/key-features">Key Features</a></li>
+                <li><a href="https://docs.openhands.dev/openhands/usage/run-openhands/local-setup">Local GUI 使用</a></li>
+                <li><a href="https://docs.openhands.dev/openhands/usage/run-openhands/cli-mode">CLI 使用</a></li>
+                <li><a href="https://docs.openhands.dev/openhands/usage/architecture/backend">Backend Architecture</a></li>
+                <li><a href="https://docs.openhands.dev/sdk">SDK 文档</a></li>
+                <li><a href="https://github.com/OpenHands/benchmarks">Benchmarks 仓库</a></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="myths">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">Common Misreads</span>
+              <h3>最容易出现的误解</h3>
+            </div>
+            <p>如果先把这些误解排掉，再去读源码，会省掉大量无效理解成本。</p>
+          </div>
+
+          <div class="myth-grid">
+            <div class="card">
+              <h4>误解 1：这个主仓就是全部 OpenHands</h4>
+              <p>不是。它是最重要的应用层主仓，但不是全部底层能力的唯一载体。</p>
+            </div>
+            <div class="card">
+              <h4>误解 2：OpenHands 就是 benchmark harness</h4>
+              <p>不是。benchmark harness 在外部 `OpenHands/benchmarks` 仓里。</p>
+            </div>
+            <div class="card">
+              <h4>误解 3：OpenHands 只是前端套壳调模型</h4>
+              <p>不是。conversation、sandbox、event、settings、user、integrations 这些层说明它是完整工作区系统。</p>
+            </div>
+            <div class="card">
+              <h4>误解 4：skills 和 microagents 是两套无关系统</h4>
+              <p>不是。它们是 V0 / V1 术语演化中的同一条能力组织脉络。</p>
+            </div>
+          </div>
+
+          <p class="footer-note">
+            如果你是第一次接触，推荐路线是：先读这页建立总图，再看 `frontend/README.md` 与 `openhands/app_server/README.md`，
+            然后再下钻到 `sandbox/`、`app_conversation/`、`event/` 三个模块。想看底层 agent 能力时，再跳到 SDK；想看评测时，再跳到 Benchmarks。
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
