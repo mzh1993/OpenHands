@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent 全景蓝图 · 2026 深度调研报告</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg-0: #0a0e1a;
+  --bg-1: #111827;
+  --bg-2: #1a2235;
+  --bg-3: #232f48;
+  --border: #2a3a5a;
+  --text-0: #e6edf3;
+  --text-1: #9ba9bd;
+  --text-2: #6b7a8f;
+  --accent: #06b6d4;
+  --accent-2: #a78bfa;
+  --accent-3: #34d399;
+  --accent-4: #fbbf24;
+  --accent-5: #f472b6;
+  --danger: #f87171;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg-0);
+  color: var(--text-0);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.65;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+/* === 顶部导航 === */
+nav.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+nav.topnav .inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+nav.topnav .brand {
+  font-weight: 700; font-size: 16px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+nav.topnav .links { display: flex; gap: 4px; flex-wrap: wrap; }
+nav.topnav .links a {
+  color: var(--text-1); text-decoration: none;
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 13px; transition: all 0.2s;
+}
+nav.topnav .links a:hover {
+  background: var(--bg-2); color: var(--accent);
+}
+/* === Hero === */
+.hero {
+  padding: 80px 32px 60px;
+  background: radial-gradient(ellipse at top, rgba(6,182,212,0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at bottom right, rgba(167,139,250,0.12) 0%, transparent 50%);
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.hero h1 {
+  font-size: 48px; font-weight: 800; letter-spacing: -1px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #06b6d4 0%, #a78bfa 50%, #f472b6 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero .subtitle {
+  font-size: 18px; color: var(--text-1);
+  max-width: 800px; margin: 0 auto 28px;
+}
+.hero .meta {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-top: 24px;
+}
+.hero .meta-tag {
+  padding: 6px 14px; background: var(--bg-2);
+  border: 1px solid var(--border); border-radius: 20px;
+  font-size: 12px; color: var(--text-1);
+}
+.hero .meta-tag strong { color: var(--accent); }
+/* === 容器 === */
+.container {
+  max-width: 1400px; margin: 0 auto; padding: 0 32px;
+}
+section {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--border);
+}
+section h2 {
+  font-size: 32px; font-weight: 700; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 12px;
+}
+section h2 .num {
+  display: inline-block; width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 8px; color: white; font-size: 16px;
+  text-align: center; line-height: 36px;
+  box-shadow: 0 4px 12px rgba(6,182,212,0.4);
+}
+section .lead {
+  font-size: 16px; color: var(--text-1);
+  margin-bottom: 32px; max-width: 900px;
+}
+/* === 6 层栈可视化 === */
+.stack-viz {
+  display: grid; gap: 8px;
+  margin: 40px 0;
+}
+.stack-row {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 24px;
+  display: grid;
+  grid-template-columns: 80px 200px 1fr;
+  gap: 20px; align-items: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.stack-row::before {
+  content: ''; position: absolute; left: 0; top: 0;
+  width: 4px; height: 100%;
+  background: var(--layer-color, var(--accent));
+}
+.stack-row:hover {
+  transform: translateX(4px);
+  border-color: var(--layer-color, var(--accent));
+  background: var(--bg-2);
+}
+.stack-row .layer-num {
+  font-size: 28px; font-weight: 800;
+  color: var(--layer-color, var(--accent));
+}
+.stack-row .layer-name {
+  font-size: 17px; font-weight: 600;
+}
+.stack-row .layer-name .desc {
+  font-size: 12px; color: var(--text-2);
+  font-weight: 400; display: block; margin-top: 2px;
+}
+.stack-row .layer-products {
+  font-size: 13px; color: var(--text-1);
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.stack-row .pill {
+  padding: 3px 10px; background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 12px; font-size: 11px;
+  color: var(--text-1);
+}
+.stack-row .pill.t1 { border-color: var(--accent); color: var(--accent); }
+.stack-row .pill.t2 { border-color: var(--accent-2); color: var(--accent-2); }
+.stack-row .pill.t3 { border-color: var(--accent-3); color: var(--accent-3); }
+.stack-row .pill.t4 { border-color: var(--accent-4); color: var(--accent-4); }
+.stack-row[data-layer="L1"] { --layer-color: #06b6d4; }
+.stack-row[data-layer="L2"] { --layer-color: #a78bfa; }
+.stack-row[data-layer="L3"] { --layer-color: #34d399; }
+.stack-row[data-layer="L4"] { --layer-color: #fbbf24; }
+.stack-row[data-layer="L5"] { --layer-color: #f472b6; }
+.stack-row[data-layer="L6"] { --layer-color: #f87171; }
+
+/* === 卡片 === */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  transition: all 0.3s;
+}
+.card:hover {
+  border-color: var(--accent);
+  background: var(--bg-2);
+}
+.card h3 {
+  font-size: 17px; font-weight: 600;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card h3 .tier-badge {
+  font-size: 10px; padding: 2px 8px;
+  border-radius: 10px; font-weight: 700;
+}
+.tier-badge.T1 { background: rgba(6,182,212,0.2); color: var(--accent); }
+.tier-badge.T2 { background: rgba(167,139,250,0.2); color: var(--accent-2); }
+.tier-badge.T3 { background: rgba(52,211,153,0.2); color: var(--accent-3); }
+.tier-badge.T4 { background: rgba(251,191,36,0.2); color: var(--accent-4); }
+.card .desc {
+  font-size: 13px; color: var(--text-1);
+  margin-bottom: 12px;
+}
+.card .stats {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  font-size: 11px;
+}
+.card .stats .stat {
+  display: flex; flex-direction: column;
+  background: var(--bg-2); padding: 6px 10px;
+  border-radius: 6px;
+}
+.card .stats .stat-label { color: var(--text-2); font-size: 10px; }
+.card .stats .stat-val { color: var(--accent-3); font-weight: 700; font-size: 13px; }
+
+/* === Tier 矩阵表 === */
+.matrix {
+  margin: 32px 0;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.matrix table {
+  width: 100%; border-collapse: collapse;
+  background: var(--bg-1);
+  min-width: 800px;
+}
+.matrix th, .matrix td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.matrix th {
+  background: var(--bg-2);
+  font-weight: 600; color: var(--text-0);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.matrix th.tier-h {
+  background: linear-gradient(135deg, var(--bg-2), var(--bg-3));
+}
+.matrix th.T1 { color: var(--accent); }
+.matrix th.T2 { color: var(--accent-2); }
+.matrix th.T3 { color: var(--accent-3); }
+.matrix th.T4 { color: var(--accent-4); }
+.matrix td { font-size: 13px; color: var(--text-1); }
+.matrix td.layer-cell {
+  font-weight: 600;
+  background: var(--bg-2);
+  color: var(--text-0);
+  white-space: nowrap;
+}
+.matrix tr:hover td { background: var(--bg-2); }
+
+/* === Mermaid 容器 === */
+.mermaid-wrap {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  overflow-x: auto;
+}
+.mermaid { display: flex; justify-content: center; }
+
+/* === Chart 容器 === */
+.chart-wrap {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.chart-wrap h4 {
+  font-size: 16px; margin-bottom: 16px;
+  color: var(--text-0);
+}
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 16px;
+}
+
+/* === Viral Cases === */
+.viral-case {
+  background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-3);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+}
+.viral-case h4 {
+  font-size: 18px; margin-bottom: 8px;
+}
+.viral-case .who {
+  font-size: 13px; color: var(--text-2);
+  margin-bottom: 12px;
+}
+.viral-case .story {
+  font-size: 13px; color: var(--text-1);
+  margin-bottom: 12px;
+}
+.viral-case .metrics {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px;
+  background: var(--bg-0);
+  border-radius: 8px;
+}
+.viral-case .metric {
+  display: flex; justify-content: space-between;
+  font-size: 12px;
+}
+.viral-case .metric-label { color: var(--text-2); }
+.viral-case .metric-val {
+  color: var(--accent-3); font-weight: 700;
+}
+.viral-case .insight {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(6,182,212,0.08);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--accent);
+  border-left: 3px solid var(--accent);
+}
+
+/* === Decision Tree === */
+.decision-tree {
+  margin: 32px 0;
+}
+.decision-root {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 12px;
+  display: inline-block;
+  margin: 0 auto 32px;
+  color: white;
+  box-shadow: 0 4px 16px rgba(6,182,212,0.3);
+}
+.decision-branches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.decision-branch {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+}
+.decision-branch h4 {
+  font-size: 14px;
+  color: var(--accent-4);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+.decision-branch ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.decision-branch li {
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border-radius: 6px;
+  font-size: 13px;
+  border-left: 3px solid var(--accent-3);
+  color: var(--text-1);
+}
+.decision-branch li.rec {
+  border-left-color: var(--accent-3);
+  background: rgba(52,211,153,0.08);
+}
+.decision-branch li.alt {
+  border-left-color: var(--accent-4);
+  background: rgba(251,191,36,0.06);
+}
+.decision-branch li.avoid {
+  border-left-color: var(--danger);
+  background: rgba(248,113,113,0.06);
+}
+.decision-branch li strong {
+  color: var(--text-0);
+}
+
+/* === Filter buttons === */
+.filter-bar {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin: 24px 0;
+}
+.filter-btn {
+  padding: 8px 18px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-1);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* === 提示框 === */
+.callout {
+  background: linear-gradient(135deg, rgba(6,182,212,0.08), rgba(167,139,250,0.08));
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--text-1);
+}
+.callout strong { color: var(--accent); }
+.callout.warn {
+  background: rgba(251,191,36,0.08);
+  border-left-color: var(--accent-4);
+}
+.callout.warn strong { color: var(--accent-4); }
+.callout.success {
+  background: rgba(52,211,153,0.08);
+  border-left-color: var(--accent-3);
+}
+.callout.success strong { color: var(--accent-3); }
+
+/* === Sources === */
+.sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+.source-link {
+  padding: 12px 16px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-1);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.2s;
+  display: block;
+}
+.source-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--bg-2);
+}
+
+/* === footer === */
+footer {
+  padding: 40px 32px;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .hero h1 { font-size: 32px; }
+  .stack-row { grid-template-columns: 50px 1fr; }
+  .stack-row .layer-products { grid-column: 1 / -1; }
+  .viral-case { grid-template-columns: 1fr; }
+  section { padding: 40px 0; }
+  .container { padding: 0 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="topnav">
+  <div class="inner">
+    <div class="brand">🚀 AI Agent Landscape 2026</div>
+    <div class="links">
+      <a href="#overview">蓝图</a>
+      <a href="#layers">6 层架构</a>
+      <a href="#tiers">4 梯队</a>
+      <a href="#l3-detail">编码 Harness</a>
+      <a href="#viral">现象级案例</a>
+      <a href="#benchmark">基准对比</a>
+      <a href="#decision">决策树</a>
+      <a href="#sources">来源</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <h1>AI Agent 全景蓝图 2026</h1>
+  <p class="subtitle">6 层架构 × 4 梯队 × 60+ 产品 · 面向 FNOS / AgentsOS 中小企业二次开发的深度选型决策报告</p>
+  <div class="meta">
+    <span class="meta-tag">📅 <strong>2026-05-18</strong></span>
+    <span class="meta-tag">🌐 国内外全谱 + 独立开发者梯队</span>
+    <span class="meta-tag">🎯 自建 <strong>DeepSeek / GLM / MiniMax / Qwen / Kimi</strong> 集群专用</span>
+    <span class="meta-tag">📊 含 <strong>SWE-Bench / 市占率 / Vibe Coding 速度</strong> 三维基准</span>
+  </div>
+</header>
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <div class="container">
+    <h2><span class="num">1</span>全景蓝图：一张图看懂</h2>
+    <p class="lead">所有 AI Agent 产品都可归入 <strong>纵 6 层 × 横 4 梯队</strong> 的二维坐标。同一格子里的产品才有可比性 —— 这是看懂整个赛道的认知地图。</p>
+
+    <!-- 6 层栈可视化 -->
+    <div class="stack-viz">
+      <div class="stack-row" data-layer="L6">
+        <div class="layer-num">L6</div>
+        <div class="layer-name">配置/插件包<span class="desc">提示词 · Hook · Skill 最佳实践</span></div>
+        <div class="layer-products">
+          <span class="pill t1">官方 Marketplace</span>
+          <span class="pill t2">awesome-* 系列</span>
+          <span class="pill t3">everything-claude-code</span>
+          <span class="pill t4">ClawHub Skill 卖家</span>
+        </div>
+      </div>
+      <div class="stack-row" data-layer="L5">
+        <div class="layer-num">L5</div>
+        <div class="layer-name">网关 / 跨 Harness 编排<span class="desc">消息平台接入 · 心跳调度 · 持久化</span></div>
+        <div class="layer-products">
+          <span class="pill t2">Devin</span>
+          <span class="pill t3">OpenClaw</span>
+          <span class="pill t3">Hermes Agent</span>
+          <span class="pill t3">OpenHuman</span>
+        </div>
+      </div>
+      <div class="stack-row" data-layer="L4">
+        <div class="layer-num">L4</div>
+        <div class="layer-name">IDE 集成<span class="desc">VS Code Fork / 插件 · 多文件编辑</span></div>
+        <div class="layer-products">
+          <span class="pill t1">Cursor</span>
+          <span class="pill t1">Windsurf</span>
+          <span class="pill t1">Trae</span>
+          <span class="pill t1">通义灵码</span>
+          <span class="pill t2">Cline / Roo</span>
+          <span class="pill t2">Continue</span>
+        </div>
+      </div>
+      <div class="stack-row" data-layer="L3">
+        <div class="layer-num">L3</div>
+        <div class="layer-name">编码 Agent Harness<span class="desc">沙箱 · 工具 · 上下文压缩 · 子 Agent</span></div>
+        <div class="layer-products">
+          <span class="pill t1">Claude Code</span>
+          <span class="pill t1">Codex CLI/Desktop</span>
+          <span class="pill t2">OpenHands</span>
+          <span class="pill t2">Aider</span>
+          <span class="pill t2">Devin</span>
+          <span class="pill t3">DeepSeek-TUI</span>
+          <span class="pill t3">Suna / OpenManus</span>
+        </div>
+      </div>
+      <div class="stack-row" data-layer="L2">
+        <div class="layer-num">L2</div>
+        <div class="layer-name">Agent 框架<span class="desc">编排原语 · 状态机 · 工具调用</span></div>
+        <div class="layer-products">
+          <span class="pill t1">LangGraph</span>
+          <span class="pill t1">MS Agent Framework</span>
+          <span class="pill t1">OpenAI Agents SDK</span>
+          <span class="pill t2">CrewAI / Smolagents</span>
+          <span class="pill t3">MetaGPT / OpenManus</span>
+        </div>
+      </div>
+      <div class="stack-row" data-layer="L1">
+        <div class="layer-num">L1</div>
+        <div class="layer-name">模型即 Agent<span class="desc">编排吃进权重 · 原生子 Agent</span></div>
+        <div class="layer-products">
+          <span class="pill t1">Claude 4.7</span>
+          <span class="pill t1">GPT-5.4-Codex</span>
+          <span class="pill t1">Gemini 3.1 Pro</span>
+          <span class="pill t2">Kimi K2.6 Swarm</span>
+          <span class="pill t2">GLM-4.6 / Qwen3 Coder</span>
+          <span class="pill t3">DeepSeek V4</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>⬆️ 越往上层抽象度越高、定制空间越小</strong> · 越往下层模型权重决定一切 · 中间层 (L2/L3) 是二次开发的最佳着力点 —— 这也是为什么 <strong>OpenHands / Cline / Continue</strong> 是中小企业首选。
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIER MATRIX ============ -->
+<section id="tiers">
+  <div class="container">
+    <h2><span class="num">2</span>4 梯队矩阵：从大厂到个人开发者</h2>
+    <p class="lead">仅看大厂主流 (T1) 会错过 <strong>真正的二次开发机会</strong>。中型团队 (T2) 和独立开发者明星项目 (T3) 才是 MIT/Apache 协议、可读源码、能自建集群对接的核心。</p>
+
+    <div class="matrix">
+      <table>
+        <thead>
+          <tr>
+            <th>层级</th>
+            <th class="tier-h T1">T1 · 大厂主流</th>
+            <th class="tier-h T2">T2 · 中型创新</th>
+            <th class="tier-h T3">T3 · 独立开发者明星</th>
+            <th class="tier-h T4">T4 · 个人副业 / Skill</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="layer-cell">L1 模型</td>
+            <td>Claude 4.7 / GPT-5.4 / Gemini 3.1</td>
+            <td>Kimi K2.6 / GLM-4.6 / Qwen3 Coder</td>
+            <td><strong>DeepSeek V4</strong> / Yi-Coder</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="layer-cell">L2 框架</td>
+            <td>LangGraph / MS Agent Framework / OpenAI Agents SDK</td>
+            <td>CrewAI / Smolagents / Pydantic AI</td>
+            <td>MetaGPT / OpenManus / Aperant</td>
+            <td>CrewAI 模板出售</td>
+          </tr>
+          <tr>
+            <td class="layer-cell">L3 编码 Harness</td>
+            <td>Claude Code / Codex CLI&Desktop / Gemini CLI</td>
+            <td>Aider / OpenHands / Goose / OpenCode / Devin</td>
+            <td><strong>DeepSeek-TUI</strong> / Suna / AutoResearch / MiroFish</td>
+            <td>OpenCode Skill 包</td>
+          </tr>
+          <tr>
+            <td class="layer-cell">L4 IDE</td>
+            <td>Cursor / Windsurf / Trae / 通义灵码 / 文心快码 / Copilot</td>
+            <td><strong>Cline / Roo Code / Continue</strong> / Augment / Cody / Tabby</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="layer-cell">L5 网关</td>
+            <td>—</td>
+            <td>Devin</td>
+            <td><strong>OpenClaw / Hermes Agent / OpenHuman</strong></td>
+            <td>ClawHub Skill 卖家月入 $1K+</td>
+          </tr>
+          <tr>
+            <td class="layer-cell">L6 配置包</td>
+            <td>官方 Marketplace</td>
+            <td>awesome-* 索引</td>
+            <td>everything-claude-code (185k★)</td>
+            <td>Anthropic Plugin Marketplace</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterTier('all')">全部</button>
+      <button class="filter-btn" onclick="filterTier('T1')">T1 大厂</button>
+      <button class="filter-btn" onclick="filterTier('T2')">T2 中型团队</button>
+      <button class="filter-btn" onclick="filterTier('T3')">T3 独立开发者</button>
+      <button class="filter-btn" onclick="filterTier('T4')">T4 个人副业</button>
+    </div>
+
+    <div class="cards" id="product-cards">
+      <!-- T1 -->
+      <div class="card" data-tier="T1">
+        <h3>Claude Code <span class="tier-badge T1">T1</span></h3>
+        <div class="desc">Anthropic 终端 Agent 平台基准。MCP/Plugin/Skill/Hook 四种扩展机制 + 子 Agent 委派定义了整个赛道的形态。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">License</span><span class="stat-val" style="color:var(--danger)">闭源</span></div>
+          <div class="stat"><span class="stat-label">2026.2 占比</span><span class="stat-val">4% 公开 commit</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T1">
+        <h3>OpenAI Codex CLI/Desktop <span class="tier-badge T1">T1</span></h3>
+        <div class="desc">Apache-2.0 CLI + 闭源 Desktop。macOS Seatbelt / Linux bubblewrap / Win 受限令牌三平台沙箱。2026.2 推出桌面端，2 月 5 日 GPT-5.3-Codex，3 月 GPT-5.4-Codex。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">用户</span><span class="stat-val">2M+ WAU</span></div>
+          <div class="stat"><span class="stat-label">速度</span><span class="stat-val">Spark 15x</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T1">
+        <h3>Cursor <span class="tier-badge T1">T1</span></h3>
+        <div class="desc">VS Code Fork，多模型路由。subagent 架构 + 精细 diff 预览 + 智能 rollback。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">价格</span><span class="stat-val">$20/月</span></div>
+          <div class="stat"><span class="stat-label">合规</span><span class="stat-val" style="color:var(--accent-4)">SOC 2 only</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T1">
+        <h3>Windsurf (Cognition) <span class="tier-badge T1">T1</span></h3>
+        <div class="desc">已被 Devin 团队收购。SWE-1.5 模型 950 tok/s（13x Sonnet 4.5）。Codemaps 可视化 + HIPAA/FedRAMP/ITAR 合规。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">速度</span><span class="stat-val">950 tok/s</span></div>
+          <div class="stat"><span class="stat-label">合规</span><span class="stat-val">全栈企业级</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T1">
+        <h3>Trae (字节) <span class="tier-badge T1">T1</span></h3>
+        <div class="desc">国内 41.2% 市占 #1。SOLO 模式从需求到部署一条龙。中文指令准确率比 Cursor 高 18%。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">用户</span><span class="stat-val">600 万+</span></div>
+          <div class="stat"><span class="stat-label">市占</span><span class="stat-val">41.2%</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T1">
+        <h3>LangGraph <span class="tier-badge T1">T1</span></h3>
+        <div class="desc">v0.4，有向图+条件边+checkpoint+时间旅行回滚。生产首选，企业级编排标杆。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">License</span><span class="stat-val">MIT</span></div>
+          <div class="stat"><span class="stat-label">梯队</span><span class="stat-val">生产首选</span></div>
+        </div>
+      </div>
+
+      <!-- T2 -->
+      <div class="card" data-tier="T2">
+        <h3>OpenHands <span class="tier-badge T2">T2</span></h3>
+        <div class="desc">前 OpenDevin，All Hands AI 团队（$18.8M A 轮）。Docker 沙箱+CodeAct+SWE-Bench Verified 77%。MIT 协议，企业级开源。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">SWE-Bench V</span><span class="stat-val">77%</span></div>
+          <div class="stat"><span class="stat-label">GitHub ★</span><span class="stat-val">68.6k</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T2">
+        <h3>Cline <span class="tier-badge T2">T2</span></h3>
+        <div class="desc">VS Code 插件 MIT，1.5M 安装。Plan/Act 双模式、明确 BYOM（任何 OpenAI-Compatible）。BYOM 标杆。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">License</span><span class="stat-val">MIT</span></div>
+          <div class="stat"><span class="stat-label">安装数</span><span class="stat-val">1.5M+</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T2">
+        <h3>Aider <span class="tier-badge T2">T2</span></h3>
+        <div class="desc">Paul Gauthier 个人项目演化成的终端派标杆。git-diff 接口 + repo map + 自动 commit。最适合 CI 集成。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">License</span><span class="stat-val">Apache 2.0</span></div>
+          <div class="stat"><span class="stat-label">连接</span><span class="stat-val">DeepSeek/Qwen/GLM 直支持</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T2">
+        <h3>CrewAI <span class="tier-badge T2">T2</span></h3>
+        <div class="desc">Role+Task+Crew 角色扮演框架。20 行代码起步、原型最快。任意 OpenAI-Compatible。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">学习曲线</span><span class="stat-val">最低</span></div>
+          <div class="stat"><span class="stat-label">场景</span><span class="stat-val">业务流程自动化</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T2">
+        <h3>Lovable <span class="tier-badge T2">T2</span></h3>
+        <div class="desc">瑞典 4 人团队 (Anton Osika 等)。Vibe Coding 创业明星 —— 12 个月达 $50M ARR。Next.js + Tailwind + Supabase。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">ARR</span><span class="stat-val">$50M / 12月</span></div>
+          <div class="stat"><span class="stat-label">用户故事</span><span class="stat-val">$800K ARR / 9月</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T2">
+        <h3>Replit Agent 4 <span class="tier-badge T2">T2</span></h3>
+        <div class="desc">2026.3 Agent 4。并行任务 + Design Mode + checkpoint rollback。SOC 2 Type II（vibe coding 平台中唯一合规）。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">出原型</span><span class="stat-val">45 min</span></div>
+          <div class="stat"><span class="stat-label">合规</span><span class="stat-val">SOC 2 Type II</span></div>
+        </div>
+      </div>
+
+      <!-- T3 -->
+      <div class="card" data-tier="T3">
+        <h3>OpenClaw <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">Peter Steinberger (奥地利) 周末项目。60 天 24.7 万 stars（GitHub 增速记录），5 月 35.5 万 stars。NVIDIA 收编+OpenAI 招人。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">GitHub ★</span><span class="stat-val">355k+</span></div>
+          <div class="stat"><span class="stat-label">用户</span><span class="stat-val">320 万</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T3">
+        <h3>Hermes Agent <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">NousResearch 出品。持久记忆 + 自动技能生成 + 用户建模 + Atropos RL 训练数据飞轮。20+ 消息平台、7 种 sandbox backend。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">GitHub ★</span><span class="stat-val">153k</span></div>
+          <div class="stat"><span class="stat-label">特色</span><span class="stat-val">越用越懂你</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T3">
+        <h3>DeepSeek-TUI <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">Hunter Bown 个人 Rust 项目，DeepSeek 官方推荐。13-crate workspace。Seatbelt/Landlock/Win 沙箱。Plan/Agent/YOLO 三模式。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">License</span><span class="stat-val">MIT</span></div>
+          <div class="stat"><span class="stat-label">大小</span><span class="stat-val">7.5MB</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T3">
+        <h3>Suna (Kortix) <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">Apache 2.0，"Manus" 反拼。OpenCode runtime + 60 skills + 3000 集成。本地或 VPS 自托管 一键 install。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">License</span><span class="stat-val">Apache 2.0</span></div>
+          <div class="stat"><span class="stat-label">免费档</span><span class="stat-val">60 分钟/月</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T3">
+        <h3>OpenManus (MetaGPT) <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">MetaGPT 团队 5 人，Manus 火爆 3 小时后开源复刻。Planner-Executor + sandbox。OpenManus-RL 子项目做 GRPO 调优。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">License</span><span class="stat-val">MIT</span></div>
+          <div class="stat"><span class="stat-label">特色</span><span class="stat-val">3 小时复刻</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T3">
+        <h3>MiroFish <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">北邮大四学生 10 天用 Claude Code 搭出群体智能预测引擎。25k stars + 陈天桥 3000 万投资。Vibe Coding 标杆。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">GitHub ★</span><span class="stat-val">25k / 10 天</span></div>
+          <div class="stat"><span class="stat-label">融资</span><span class="stat-val">¥3000 万</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T3">
+        <h3>AutoResearch (Karpathy) <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">Karpathy 个人项目。630 行 Python，1 块 GPU 跑 700 次实验。一周 32.6k stars。个人科学家级影响力 + 极简代码示范。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">GitHub ★</span><span class="stat-val">32.6k / 1周</span></div>
+          <div class="stat"><span class="stat-label">代码</span><span class="stat-val">630 行</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T3">
+        <h3>everything-claude-code <span class="tier-badge T3">T3</span></h3>
+        <div class="desc">affaan-m 个人维护的 Claude Code 配置最佳实践。v1.8.0 起定位 "agent harness performance system"，含 AgentShield 102 安全规则 + 912 测试。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">GitHub ★</span><span class="stat-val">185k</span></div>
+          <div class="stat"><span class="stat-label">Forks</span><span class="stat-val">28.6k</span></div>
+        </div>
+      </div>
+
+      <!-- T4 -->
+      <div class="card" data-tier="T4">
+        <h3>ClawHub Skill 卖家 <span class="tier-badge T4">T4</span></h3>
+        <div class="desc">OpenClaw 衍生 Skill 经济。单 Skill 售价 $10–200。头部月入 $1000+。180 家衍生公司合计月入 $320K+。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">单价</span><span class="stat-val">$10–200</span></div>
+          <div class="stat"><span class="stat-label">头部月入</span><span class="stat-val">$1000+</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T4">
+        <h3>Solo AI Agency <span class="tier-badge T4">T4</span></h3>
+        <div class="desc">单人 AI 代理公司服务 20+ 客户，AI 自动化 80%。报告月入 $10K–$30K。生产级 SaaS 月成本 $85–$200。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">月入</span><span class="stat-val">$10K–30K</span></div>
+          <div class="stat"><span class="stat-label">客户</span><span class="stat-val">20+</span></div>
+        </div>
+      </div>
+      <div class="card" data-tier="T4">
+        <h3>Vibe Coding MVP 创始人 <span class="tier-badge T4">T4</span></h3>
+        <div class="desc">非开发者用 Lovable 跑出虚拟试穿 9 个月 $800K ARR。Lovable→Cursor→Vercel 的"原型生产化"标准路径。</div>
+        <div class="stats">
+          <div class="stat"><span class="stat-label">ARR</span><span class="stat-val">$800K / 9月</span></div>
+          <div class="stat"><span class="stat-label">栈</span><span class="stat-val">Lovable+Cursor</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 LAYERS DETAIL ============ -->
+<section id="layers">
+  <div class="container">
+    <h2><span class="num">3</span>6 层架构详解</h2>
+    <p class="lead">每层解决不同问题，<strong>千万不要把 L2 框架和 L3 Harness 搞混</strong> —— 它们解决的根本不是同一件事。</p>
+
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart TB
+    subgraph L1["L1 · 模型即 Agent"]
+        M1[Claude 4.7<br/>编排训进权重]
+        M2[Kimi K2.6 Swarm<br/>PARL 训练 · 300 子Agent]
+        M3[DeepSeek V4<br/>1M 上下文]
+    end
+    subgraph L2["L2 · Agent 框架"]
+        F1[LangGraph<br/>状态机 + checkpoint]
+        F2[CrewAI<br/>角色扮演]
+        F3[OpenManus<br/>Planner-Executor]
+    end
+    subgraph L3["L3 · 编码 Agent Harness"]
+        H1[Claude Code<br/>MCP/Plugin/Skill/Hook]
+        H2[OpenHands<br/>Docker 沙箱]
+        H3[DeepSeek-TUI<br/>Rust + 三平台沙箱]
+    end
+    subgraph L4["L4 · IDE 集成"]
+        I1[Cursor / Windsurf / Trae<br/>VS Code Fork]
+        I2[Cline / Continue<br/>VS Code 插件]
+    end
+    subgraph L5["L5 · 网关 / 跨 Harness"]
+        G1[OpenClaw<br/>消息平台接入]
+        G2[Hermes Agent<br/>持久记忆]
+    end
+    subgraph L6["L6 · 配置包"]
+        C1[everything-claude-code<br/>Skill/Hook 最佳实践]
+    end
+    L6 -.装备包.-> L3
+    L6 -.装备包.-> L4
+    L5 -->|spawn| L3
+    L4 -->|内嵌| L3
+    L3 -->|调用| L2
+    L2 -->|API| L1
+    L3 -.直接调用.-> L1
+    style L1 fill:#0c4a6e,stroke:#06b6d4,color:#e6edf3
+    style L2 fill:#4c1d95,stroke:#a78bfa,color:#e6edf3
+    style L3 fill:#065f46,stroke:#34d399,color:#e6edf3
+    style L4 fill:#78350f,stroke:#fbbf24,color:#e6edf3
+    style L5 fill:#831843,stroke:#f472b6,color:#e6edf3
+    style L6 fill:#7f1d1d,stroke:#f87171,color:#e6edf3
+      </div>
+    </div>
+
+    <h3 style="font-size:20px;margin:32px 0 16px;color:var(--accent)">L3 · 编码 Harness 的核心循环</h3>
+    <p class="lead">所有 Harness 都是同一个循环 —— <strong>差异全在循环周围的"系统"</strong>。</p>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart LR
+    A([用户输入]) --> B[model_call]
+    B --> C{需要工具?}
+    C -->|是| D[tool_use]
+    C -->|否| H([完成])
+    D --> E[沙箱执行<br/>Seatbelt/Docker/Landlock]
+    E --> F[tool_result]
+    F --> G[compact_context<br/>5 层压缩]
+    G --> I{委派子 Agent?}
+    I -->|是| J[spawn subagent<br/>独立上下文]
+    J --> K[子 Agent 只回传摘要]
+    K --> B
+    I -->|否| B
+    style A fill:#06b6d4,color:white
+    style H fill:#34d399,color:white
+    style E fill:#fbbf24,color:black
+    style J fill:#a78bfa,color:white
+    style G fill:#f472b6,color:white
+      </div>
+    </div>
+
+    <h3 style="font-size:20px;margin:32px 0 16px;color:var(--accent-3)">微团队成功剧本（T3 通用模式）</h3>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart LR
+    A[周末项目<br/>单人/小团队] --> B[静默上线 GitHub]
+    B --> C[选准时机<br/>DeepSeek/Manus 同期话题]
+    C --> D[Show HN/PH<br/>installs in one command]
+    D --> E[24-48h<br/>GitHub Trending #1]
+    E --> F[60 天<br/>6 位数 stars]
+    F --> G{大厂接洽}
+    G -->|NVIDIA 把它做企业产品| H[商业化收购]
+    G -->|OpenAI 招人| I[人才争夺]
+    F --> J[衍生生态<br/>Skill 卖家 + 监控 + 安全 + 教育]
+    J --> K[月入 $1K-$30K<br/>180+ 衍生公司]
+    style A fill:#06b6d4,color:white
+    style D fill:#a78bfa,color:white
+    style F fill:#34d399,color:white
+    style K fill:#fbbf24,color:black
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ L3 DETAIL ============ -->
+<section id="l3-detail">
+  <div class="container">
+    <h2><span class="num">4</span>L3 编码 Harness 全梯队</h2>
+    <p class="lead">这一层产品最多、设计最精细，是中小企业二次开发的<strong>核心战场</strong>。</p>
+
+    <div class="matrix">
+      <table>
+        <thead>
+          <tr>
+            <th>梯队</th>
+            <th>产品</th>
+            <th>沙箱</th>
+            <th>上下文管理</th>
+            <th>扩展点</th>
+            <th>License</th>
+            <th>适合自建集群</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tier-badge T1">T1</span></td>
+            <td><strong>Claude Code</strong></td>
+            <td>shell sandbox</td>
+            <td>5 层压缩 + 懒加载 + 子 Agent 摘要</td>
+            <td>MCP/Plugin/Skill/Hook</td>
+            <td style="color:var(--danger)">闭源</td>
+            <td>⚠️ 协议非公开</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T1">T1</span></td>
+            <td><strong>OpenAI Codex CLI</strong></td>
+            <td>Seatbelt/bubblewrap/受限令牌</td>
+            <td>App Server 跨客户端</td>
+            <td>MCP</td>
+            <td>Apache-2.0</td>
+            <td>⚠️ App Server 绑定 OpenAI</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T2">T2</span></td>
+            <td><strong>OpenHands</strong></td>
+            <td>Docker + Jupyter + BrowserGym</td>
+            <td>CodeAct 范式</td>
+            <td>V1 SDK 模块化</td>
+            <td style="color:var(--accent-3)">MIT</td>
+            <td>⭐⭐⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T2">T2</span></td>
+            <td><strong>Aider</strong></td>
+            <td>无（依赖 git）</td>
+            <td>git-diff + repo map</td>
+            <td>简单</td>
+            <td style="color:var(--accent-3)">Apache 2.0</td>
+            <td>⭐⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T2">T2</span></td>
+            <td><strong>SWE-agent</strong></td>
+            <td>Docker</td>
+            <td>ACI 抽象</td>
+            <td>简单</td>
+            <td style="color:var(--accent-3)">MIT</td>
+            <td>⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T2">T2</span></td>
+            <td><strong>Goose</strong></td>
+            <td>OS 级</td>
+            <td>标准</td>
+            <td>MCP-first</td>
+            <td style="color:var(--accent-3)">Apache 2.0</td>
+            <td>⭐⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T2">T2</span></td>
+            <td><strong>Devin</strong></td>
+            <td>云端 VM</td>
+            <td>闭源</td>
+            <td>闭源</td>
+            <td style="color:var(--danger)">SaaS 闭源</td>
+            <td>❌ 不可私有化</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T3">T3</span></td>
+            <td><strong>DeepSeek-TUI</strong></td>
+            <td>Seatbelt/Landlock/Win</td>
+            <td>1M context + prefix cache</td>
+            <td>Skills (GitHub 直装)</td>
+            <td style="color:var(--accent-3)">MIT (Rust)</td>
+            <td>⭐⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T3">T3</span></td>
+            <td><strong>Suna (Kortix)</strong></td>
+            <td>Linux Ubuntu sandbox</td>
+            <td>持久记忆共享文件系统</td>
+            <td>60 skills + 3000 集成</td>
+            <td style="color:var(--accent-3)">Apache 2.0</td>
+            <td>⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge T3">T3</span></td>
+            <td><strong>OpenManus</strong></td>
+            <td>各自</td>
+            <td>Planner-Executor</td>
+            <td>OpenManus-RL 子项目</td>
+            <td style="color:var(--accent-3)">MIT</td>
+            <td>⭐⭐⭐</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIRAL CASES ============ -->
+<section id="viral">
+  <div class="container">
+    <h2><span class="num">5</span>2026 现象级案例（T3/T4 深度）</h2>
+    <p class="lead">中小创新企业 / 微团队 / 个人创业者的成功剧本 —— 这才是 2026 真正的故事，不是大厂榜单。</p>
+
+    <div class="viral-case">
+      <div>
+        <h4>🚀 OpenClaw — GitHub 最快增长非聚合器项目</h4>
+        <div class="who">Peter Steinberger（PSPDFKit 创始人，奥地利"vibe-coder"）· 2025.11 静默上线 → 2026.1.25 在 HN/PH 发布</div>
+        <div class="story">
+          只用"Show HN: Clawdbot, open-source autonomous AI agent, installs in one command"一句话发帖，3 天内从 9000 stars 暴涨到 60000+。60 天达 24.7 万 stars，超过 React 用时（React 用了 10 年达到 25 万）。
+          产品本质：跨消息平台网关（WhatsApp/Telegram/Discord/Slack/Signal 50+ 集成）+ 心跳调度 + Skill 系统。MIT 协议，本地 Markdown 存储。
+        </div>
+        <div class="insight">💡 启示：选对模块化设计（discrete swappable skills）+ 选对发布时机（DeepSeek 热度后）+ 选对叙事（installs in one command）= 火箭燃料</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="metric-label">GitHub stars (5月)</span><span class="metric-val">355,000</span></div>
+        <div class="metric"><span class="metric-label">活跃用户</span><span class="metric-val">3.2M</span></div>
+        <div class="metric"><span class="metric-label">运行实例</span><span class="metric-val">500K+</span></div>
+        <div class="metric"><span class="metric-label">衍生公司</span><span class="metric-val">180 家</span></div>
+        <div class="metric"><span class="metric-label">合计月营收</span><span class="metric-val">$320K+</span></div>
+        <div class="metric"><span class="metric-label">大厂收编</span><span class="metric-val">NVIDIA / OpenAI</span></div>
+      </div>
+    </div>
+
+    <div class="viral-case">
+      <div>
+        <h4>🐟 MiroFish — 学生 10 天造出"原本需要团队的工程"</h4>
+        <div class="who">北邮大四学生 · 单人 / 用 Claude Code</div>
+        <div class="story">
+          10 天搭出一个"群体智能预测引擎"，GitHub 2.5 万 stars + 陈天桥（盛大创始人）3000 万人民币投资。这是 2026 一季度 Vibe Coding 范式最具说服力的案例 —— 学生级别的人也能独自完成原本需要几个工程师的项目。
+        </div>
+        <div class="insight">💡 启示：Claude Code + 单一垂直 idea + 公开 build in public = 学生也能获得 V 轮规模融资</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="metric-label">GitHub stars</span><span class="metric-val">25k / 10 天</span></div>
+        <div class="metric"><span class="metric-label">融资</span><span class="metric-val">¥3000 万</span></div>
+        <div class="metric"><span class="metric-label">投资方</span><span class="metric-val">陈天桥</span></div>
+        <div class="metric"><span class="metric-label">工具栈</span><span class="metric-val">Claude Code</span></div>
+        <div class="metric"><span class="metric-label">团队规模</span><span class="metric-val">1 人</span></div>
+      </div>
+    </div>
+
+    <div class="viral-case">
+      <div>
+        <h4>🦞 OpenManus — MetaGPT 团队 3 小时复刻 Manus</h4>
+        <div class="who">FoundationAgents (MetaGPT 团队 5 人 · UIUC 合作)</div>
+        <div class="story">
+          2025.3 Manus 邀请码刷屏后 3 小时内，MetaGPT 团队就把"Manus 架构 (planner-executor + sandbox)"做了 MIT 开源复刻 OpenManus，并启动 OpenManus-RL 用 GRPO 调优。
+          这种"学术团队反应速度 = 商业模仿者的 10x"成为 2026 标志性事件。
+        </div>
+        <div class="insight">💡 启示：学术背景 + 已有同类研究积累 + 快速反应 = 占领开源标准位</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="metric-label">复刻速度</span><span class="metric-val">3 小时</span></div>
+        <div class="metric"><span class="metric-label">License</span><span class="metric-val">MIT</span></div>
+        <div class="metric"><span class="metric-label">RL 子项目</span><span class="metric-val">OpenManus-RL</span></div>
+        <div class="metric"><span class="metric-label">协作</span><span class="metric-val">UIUC 研究</span></div>
+      </div>
+    </div>
+
+    <div class="viral-case">
+      <div>
+        <h4>💝 Lovable — Vibe Coding 创业明星</h4>
+        <div class="who">Anton Osika 等瑞典 4 人团队 · 前身 GPT Engineer</div>
+        <div class="story">
+          2024 创立，12 个月达 $50M ARR，成为 2025 增长最快的 AI 产品之一。
+          一非开发者用它做的虚拟试穿应用 9 个月跑到 $80 万 ARR。
+          产品本质：聊天即建 Next.js + Tailwind + Supabase 全栈，GitHub 双向同步，Stripe 一键集成。
+        </div>
+        <div class="insight">💡 启示：Lovable 做"前 80%"，Cursor + Claude Code 做"后 20%" —— 这是非开发者创始人到生产的标准路径</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="metric-label">12 月 ARR</span><span class="metric-val">$50M</span></div>
+        <div class="metric"><span class="metric-label">团队规模</span><span class="metric-val">4 人</span></div>
+        <div class="metric"><span class="metric-label">用户案例</span><span class="metric-val">$800K ARR / 9月</span></div>
+        <div class="metric"><span class="metric-label">出原型</span><span class="metric-val">35 min</span></div>
+      </div>
+    </div>
+
+    <div class="viral-case">
+      <div>
+        <h4>🦋 Manus AI — 国内首个出海 Agent 标杆（命运曲折）</h4>
+        <div class="who">肖弘 / Butterfly Effect（武汉→北京→新加坡）</div>
+        <div class="story">
+          2025.3.6 邀请码上线，Demo 视频 20 小时百万观看。3 模式 (Chat / Agent / Wide Research 100+ 并行子 Agent)。GAIA L1 86.5、L2 70.1、L3 57.7 全面超 OpenAI Deep Research。
+          2025 年底 Meta 以 $20 亿收购，但 2026.4.27 中国发改委叫停收购，团队部分高管出境受限。
+        </div>
+        <div class="insight">💡 启示：技术 + 出海 + 收购退出的剧本依然可走，但地缘政治变量已不可忽视</div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span class="metric-label">GAIA L1</span><span class="metric-val">86.5</span></div>
+        <div class="metric"><span class="metric-label">收购报价</span><span class="metric-val">$20 亿</span></div>
+        <div class="metric"><span class="metric-label">收购状态</span><span class="metric-val" style="color:var(--danger)">被叫停</span></div>
+        <div class="metric"><span class="metric-label">团队</span><span class="metric-val">100 人</span></div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <strong>📈 Indie Hacker 经济结构（2026）</strong> · 生产级 SaaS 月成本 <strong>$85–200</strong>（2019 同等需 $5000+）· 单人 AI 代理公司月入 <strong>$10K–30K</strong> · "百万美元单人公司"已从预测变为可观测事实
+    </div>
+    <div class="callout warn">
+      <strong>⚠️ Vibe Coding "最后 20%"问题</strong> · Lovable / Bolt / v0 出原型快，但生产部署仍需 Cursor + Claude Code 接力。Vibe Coding 平台的代码质量 6-7/10，缺安全审查，<strong>不适合受监管行业直接生产</strong>。
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENCHMARKS ============ -->
+<section id="benchmark">
+  <div class="container">
+    <h2><span class="num">6</span>三维基准对比</h2>
+    <p class="lead">SWE-Bench 模型/Harness 性能 · 国内 IDE 市占率 · Vibe Coding 平台出原型速度。</p>
+
+    <div class="chart-grid">
+      <div class="chart-wrap">
+        <h4>📊 SWE-Bench Verified 性能</h4>
+        <canvas id="chart-swebench"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <h4>🇨🇳 国内 IDE 市占率（2026 Q1）</h4>
+        <canvas id="chart-marketshare"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <h4>⚡ Vibe Coding 出原型时间</h4>
+        <canvas id="chart-vibe"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <h4>⭐ T3 现象级项目 GitHub Stars</h4>
+        <canvas id="chart-stars"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DECISION TREE ============ -->
+<section id="decision">
+  <div class="container">
+    <h2><span class="num">7</span>FNOS / AgentsOS 二次开发决策树</h2>
+    <p class="lead">基于"自建中文模型集群 + 中小企业二次开发"约束，按场景给出强推 / 次推 / 避坑选项。</p>
+
+    <div class="decision-tree">
+      <div style="text-align:center;margin-bottom:24px">
+        <div class="decision-root">🎯 我的核心约束<br/>OpenAI-Compatible · 私有部署 · 可改源码</div>
+      </div>
+
+      <div class="decision-branches">
+        <div class="decision-branch">
+          <h4>🏢 内部 Devin（5-30 人技术团队）</h4>
+          <ul>
+            <li class="rec"><strong>强推 · OpenHands + V1 SDK</strong><br/>MIT · 77% SWE-Bench V · Docker 沙箱 · 任意 OpenAI-Compatible</li>
+            <li class="alt"><strong>次推 · Suna / DeepSeek-TUI</strong><br/>定制化好 · 但社区规模 < OpenHands</li>
+            <li class="avoid"><strong>避坑 · Devin</strong><br/>闭源 SaaS 不可私有化</li>
+          </ul>
+        </div>
+
+        <div class="decision-branch">
+          <h4>💻 VS Code 团队铺开（10-50 人）</h4>
+          <ul>
+            <li class="rec"><strong>强推 · Cline 或 Roo Code + LiteLLM 网关</strong><br/>MIT · 1.5M 安装 · 任意 endpoint · 工程师零迁移</li>
+            <li class="alt"><strong>次推 · Continue.dev</strong><br/>VS Code + JetBrains 双栈 · Hub 配置中心适合跨语言团队</li>
+            <li class="avoid"><strong>避坑 · Cursor / Windsurf</strong><br/>闭源核心 · 二次开发空间小</li>
+          </ul>
+        </div>
+
+        <div class="decision-branch">
+          <h4>🔐 跨 IDE + 企业合规需求</h4>
+          <ul>
+            <li class="rec"><strong>强推 · Continue.dev + 自建 Hub</strong><br/>VS Code + JetBrains 双栈 · 配置版本化</li>
+            <li class="alt"><strong>次推 · Tabby</strong><br/>自托管全栈 · 含 model server</li>
+            <li class="avoid"><strong>避坑 · Trae / 通义灵码</strong><br/>厂商绑定 · 数据通道不可控</li>
+          </ul>
+        </div>
+
+        <div class="decision-branch">
+          <h4>🛠️ 老派工程师 CLI 派</h4>
+          <ul>
+            <li class="rec"><strong>强推 · Aider + DeepSeek V4</strong><br/>一行命令起步 · repo map 大代码库友好</li>
+            <li class="alt"><strong>次推 · OpenCode / DeepSeek-TUI</strong><br/>多模型 TUI / Rust 性能</li>
+            <li class="avoid"><strong>避坑 · Claude Code 反代</strong><br/>协议非公开 · 长期维护风险</li>
+          </ul>
+        </div>
+
+        <div class="decision-branch">
+          <h4>🤝 多 Agent 业务流（客服/HR/研报）</h4>
+          <ul>
+            <li class="rec"><strong>强推 · LangGraph + 自家执行层</strong><br/>v0.4 · checkpoint · 时间旅行 · 可观测性最强</li>
+            <li class="alt"><strong>次推 · CrewAI (原型) / Dify (低代码)</strong><br/>20 行起步 / 国内私有化部署友好</li>
+            <li class="avoid"><strong>避坑 · AutoGen</strong><br/>已维护模式 · MS 主推 Agent Framework</li>
+          </ul>
+        </div>
+
+        <div class="decision-branch">
+          <h4>🚀 "Manus 自托管版" 通用任务 Agent</h4>
+          <ul>
+            <li class="rec"><strong>强推 · Suna (Kortix)</strong><br/>Apache 2.0 · 60 skills · 3000 集成 · 一键 install</li>
+            <li class="alt"><strong>次推 · OpenManus + RL 调优</strong><br/>MetaGPT 团队维护 · 学术研究友好</li>
+            <li class="avoid"><strong>避坑 · Manus</strong><br/>闭源 + 收购被叫停 + 未来不确定</li>
+          </ul>
+        </div>
+
+        <div class="decision-branch">
+          <h4>🤖 模型层（核心选型）</h4>
+          <ul>
+            <li class="rec"><strong>强推 · DeepSeek V4 主力</strong><br/>开源 1M 上下文 · 编码场景最强中文开源</li>
+            <li class="alt"><strong>备份 · GLM-4.6 / Qwen3 Coder / Kimi K2.6</strong><br/>多家备份避免单点 · K2.6 长程任务最强</li>
+            <li class="alt"><strong>专用 · MiniMax M2</strong><br/>长上下文 / 多模态场景</li>
+          </ul>
+        </div>
+
+        <div class="decision-branch">
+          <h4>📦 L6 配置最佳实践</h4>
+          <ul>
+            <li class="rec"><strong>强推 · 抄 everything-claude-code 结构</strong><br/>Agent / Skill / Hook YAML 范式 · AgentShield 102 规则</li>
+            <li class="alt"><strong>建立自家 Skill 包</strong><br/>把企业合规规则做成可分发 Skill</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <strong>✅ 终极组合（强推荐栈）</strong><br/>
+      <code style="color:var(--accent-3)">[模型]</code> DeepSeek V4 主力 + Qwen3 Coder / GLM-4.6 / Kimi K2.6 备份<br/>
+      <code style="color:var(--accent-3)">[编排]</code> LangGraph (生产关键链路) + 直接 OpenAI SDK (简单链路)<br/>
+      <code style="color:var(--accent-3)">[Harness]</code> OpenHands 自建 + Cline / Roo Code 给工程师选项<br/>
+      <code style="color:var(--accent-3)">[网关]</code> 自研 LiteLLM 网关统一协议 · MCP 作为工具协议<br/>
+      <code style="color:var(--accent-3)">[配置]</code> 抄 everything-claude-code 结构造自家合规 Skill 包
+    </div>
+
+    <div class="callout warn">
+      <strong>⚠️ 关键决策原则</strong> · 不要双重编排（K2.6 跑 swarm 时关掉外层 LangGraph）· MCP 优先所有自研工具 · 不押宝单一模型 · 避免 Claude Code 反代等"协议非公开"路径
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRENDS ============ -->
+<section id="trends">
+  <div class="container">
+    <h2><span class="num">8</span>2026-2027 七大趋势</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>1️⃣ 编排下沉到模型权重</h3>
+        <div class="desc">K2.6 PARL 是先行者，预计 2027 多家跟进。中型 Agent 框架（CrewAI/AutoGen）会被进一步压缩。</div>
+      </div>
+      <div class="card">
+        <h3>2️⃣ 超级 App 收口</h3>
+        <div class="desc">OpenAI 已宣布 ChatGPT + Codex + Atlas 合并成单一桌面端，Anthropic 可能跟进。</div>
+      </div>
+      <div class="card">
+        <h3>3️⃣ MCP 成事实标准</h3>
+        <div class="desc">所有 Harness 都说支持，但兼容性仍在磨合，2026 下半年应趋稳。</div>
+      </div>
+      <div class="card">
+        <h3>4️⃣ 国产工具 Agent 自主性追平</h3>
+        <div class="desc">Trae SOLO + 通义灵码 + 文心快码多智能体矩阵都在追赶 Claude Code。</div>
+      </div>
+      <div class="card">
+        <h3>5️⃣ L5 网关 / 个人助手成为新风口</h3>
+        <div class="desc">OpenClaw 是开端，预计 2026 出现 5+ 同形态产品。</div>
+      </div>
+      <div class="card">
+        <h3>6️⃣ Vibe Coding 平台分化</h3>
+        <div class="desc">Lovable / Bolt / v0 / Replit 已开始分场景占位，下一步是垂直化（行业模板）。</div>
+      </div>
+      <div class="card">
+        <h3>7️⃣ 独立开发者 / 微团队崛起</h3>
+        <div class="desc">MiroFish 这种"学生 10 天 25k stars"案例会变多，AI Coding 工具消除团队规模壁垒。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section id="sources">
+  <div class="container">
+    <h2><span class="num">9</span>主要参考来源</h2>
+    <p class="lead">所有数据来源公开网页，引用时请核验原始链接。</p>
+
+    <h3 style="font-size:16px;margin:24px 0 12px;color:var(--accent)">核心架构 / 平台</h3>
+    <div class="sources-grid">
+      <a class="source-link" href="https://www.penligent.ai/hackinglabs/inside-claude-code-the-architecture-behind-tools-memory-hooks-and-mcp/" target="_blank">Inside Claude Code Architecture (penligent.ai)</a>
+      <a class="source-link" href="https://developers.openai.com/codex/concepts/sandboxing" target="_blank">OpenAI Codex CLI & Sandbox docs</a>
+      <a class="source-link" href="https://dev.to/pockit_tools/cursor-vs-windsurf-vs-claude-code-in-2026-the-honest-comparison-after-using-all-three-3gof" target="_blank">Cursor vs Windsurf vs Claude Code 2026 (dev.to)</a>
+      <a class="source-link" href="https://zoer.ai/posts/zoer/trae-cursor-windsurf-comparison-2026" target="_blank">Trae vs Cursor vs Windsurf 2026 (zoer.ai)</a>
+    </div>
+
+    <h3 style="font-size:16px;margin:24px 0 12px;color:var(--accent-2)">L1 模型 / L2 框架</h3>
+    <div class="sources-grid">
+      <a class="source-link" href="https://www.marktechpost.com/2026/04/20/moonshot-ai-releases-kimi-k2-6-with-long-horizon-coding-agent-swarm-scaling-to-300-sub-agents-and-4000-coordinated-steps/" target="_blank">Kimi K2.6 Agent Swarm (MarkTechPost)</a>
+      <a class="source-link" href="https://docs.bswen.com/blog/2026-04-29-agent-framework-production-comparison/" target="_blank">LangGraph vs AutoGen vs CrewAI vs Swarm 2026 (BSWEN)</a>
+    </div>
+
+    <h3 style="font-size:16px;margin:24px 0 12px;color:var(--accent-3)">L3 编码 Harness</h3>
+    <div class="sources-grid">
+      <a class="source-link" href="https://www.openhands.dev/blog/openhands-index" target="_blank">OpenHands V1 / Index Benchmark</a>
+      <a class="source-link" href="https://toolhalla.ai/blog/devin-vs-openhands-vs-swe-agent-2026" target="_blank">Devin vs OpenHands vs SWE-agent 2026 (ToolHalla)</a>
+      <a class="source-link" href="https://github.com/Hmbown/DeepSeek-TUI" target="_blank">DeepSeek-TUI by Hmbown</a>
+      <a class="source-link" href="https://github.com/openai/codex" target="_blank">OpenAI Codex CLI (GitHub)</a>
+    </div>
+
+    <h3 style="font-size:16px;margin:24px 0 12px;color:var(--accent-4)">L4 IDE / L5 网关 / L6 配置包</h3>
+    <div class="sources-grid">
+      <a class="source-link" href="https://blog.csdn.net/csdngouwei/article/details/160726130" target="_blank">国产 5 大 AI 编程工具横评 2026 (CSDN)</a>
+      <a class="source-link" href="https://inbounter.com/blog/openclaw-2026-timeline" target="_blank">OpenClaw 2026 Timeline</a>
+      <a class="source-link" href="https://github.com/nousresearch/hermes-agent" target="_blank">Hermes Agent (NousResearch)</a>
+      <a class="source-link" href="https://github.com/affaan-m/everything-claude-code" target="_blank">everything-claude-code by affaan-m</a>
+    </div>
+
+    <h3 style="font-size:16px;margin:24px 0 12px;color:var(--accent-5)">独立开发者 / 微团队 / Vibe Coding</h3>
+    <div class="sources-grid">
+      <a class="source-link" href="https://www.technologyreview.com/2025/03/11/1113133/manus-ai-review/" target="_blank">Manus AI Review (MIT Technology Review)</a>
+      <a class="source-link" href="https://github.com/FoundationAgents/OpenManus" target="_blank">OpenManus (FoundationAgents)</a>
+      <a class="source-link" href="https://github.com/kortix-ai/suna" target="_blank">Suna by Kortix AI</a>
+      <a class="source-link" href="https://lovable.dev/guides/best-vibe-coding-tools-2026-build-apps-chatting" target="_blank">Best Vibe Coding Tools 2026 (Lovable)</a>
+      <a class="source-link" href="https://lovable.dev/guides/bolt-vs-replit-vs-lovable" target="_blank">Bolt vs Replit vs Lovable 2026</a>
+      <a class="source-link" href="https://ofox.ai/zh/blog/vibe-coding-ai-workflow-guide-2026/" target="_blank">Vibe Coding 完全指南 2026 (ofox.ai)</a>
+      <a class="source-link" href="https://zhuanlan.zhihu.com/p/2020798560287897282" target="_blank">2026 Agent 生态爆发 5 个项目 (知乎)</a>
+      <a class="source-link" href="https://github.com/caramaschiHG/awesome-ai-agents-2026" target="_blank">awesome-ai-agents-2026</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  报告由 Claude Opus 4.7 (1M context) 生成 · FNOS / AgentsOS 项目 · 2026-05-18 · <a href="./AI-Agent-Landscape-Report.md" style="color:var(--accent)">原始 Markdown 报告</a>
+</footer>
+
+<script>
+// === Mermaid 初始化 ===
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'dark',
+  themeVariables: {
+    primaryColor: '#1a2235',
+    primaryTextColor: '#e6edf3',
+    primaryBorderColor: '#06b6d4',
+    lineColor: '#6b7a8f',
+    secondaryColor: '#232f48',
+    tertiaryColor: '#111827',
+    background: '#0a0e1a',
+    mainBkg: '#1a2235',
+    secondBkg: '#232f48',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif',
+    fontSize: '14px'
+  },
+  flowchart: { curve: 'basis', padding: 20 }
+});
+
+// === Tier 卡片过滤 ===
+function filterTier(tier) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('#product-cards .card').forEach(card => {
+    if (tier === 'all' || card.dataset.tier === tier) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// === Chart.js 全局样式 ===
+Chart.defaults.color = '#9ba9bd';
+Chart.defaults.borderColor = '#2a3a5a';
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif';
+
+// 1. SWE-Bench Verified
+new Chart(document.getElementById('chart-swebench'), {
+  type: 'bar',
+  data: {
+    labels: ['Kimi K2.6', 'GPT-5.4 xhigh', 'OpenHands+Claude 4.5', 'Claude Opus 4.6', 'Gemini 3.1 Pro', 'OpenHands+Qwen3 480B'],
+    datasets: [{
+      label: 'SWE-Bench Verified (%)',
+      data: [80.2, 80, 77, 76, 75, 65],
+      backgroundColor: [
+        'rgba(167,139,250,0.7)',   // K2.6 - T2
+        'rgba(6,182,212,0.7)',     // GPT - T1
+        'rgba(52,211,153,0.7)',    // OpenHands+Claude
+        'rgba(6,182,212,0.7)',     // Claude - T1
+        'rgba(6,182,212,0.7)',     // Gemini - T1
+        'rgba(52,211,153,0.7)'     // OpenHands+Qwen - 全开源栈
+      ],
+      borderColor: [
+        '#a78bfa', '#06b6d4', '#34d399', '#06b6d4', '#06b6d4', '#34d399'
+      ],
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a2235',
+        borderColor: '#06b6d4',
+        borderWidth: 1
+      }
+    },
+    scales: {
+      y: { beginAtZero: true, max: 100, grid: { color: 'rgba(42,58,90,0.5)' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// 2. 国内 IDE 市占率
+new Chart(document.getElementById('chart-marketshare'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Trae (字节)', '通义灵码 (阿里)', '文心快码 (百度)', 'MarsCode', 'CodeGeeX (智谱)', '其他'],
+    datasets: [{
+      data: [41.2, 18.5, 12.3, 9, 6, 13],
+      backgroundColor: [
+        '#06b6d4', '#a78bfa', '#34d399', '#fbbf24', '#f472b6', '#6b7a8f'
+      ],
+      borderColor: '#0a0e1a',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 12, font: { size: 12 } } },
+      tooltip: {
+        backgroundColor: '#1a2235',
+        callbacks: {
+          label: (ctx) => ctx.label + ': ' + ctx.parsed + '%'
+        }
+      }
+    }
+  }
+});
+
+// 3. Vibe Coding 出原型时间
+new Chart(document.getElementById('chart-vibe'), {
+  type: 'bar',
+  data: {
+    labels: ['Bolt.new', 'Lovable', 'Replit Agent', 'Windsurf', 'Cursor'],
+    datasets: [
+      {
+        label: '出原型时间 (分钟)',
+        data: [28, 35, 45, 65, 50],
+        backgroundColor: 'rgba(6,182,212,0.6)',
+        borderColor: '#06b6d4',
+        borderWidth: 2,
+        yAxisID: 'y'
+      },
+      {
+        label: '代码质量 (1-10)',
+        data: [6, 7, 7, 8.5, 8],
+        backgroundColor: 'rgba(251,191,36,0.6)',
+        borderColor: '#fbbf24',
+        borderWidth: 2,
+        type: 'line',
+        yAxisID: 'y1'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top', labels: { padding: 12 } },
+      tooltip: { backgroundColor: '#1a2235' }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        position: 'left',
+        grid: { color: 'rgba(42,58,90,0.5)' },
+        title: { display: true, text: '出原型时间 (分钟)', color: '#06b6d4' }
+      },
+      y1: {
+        beginAtZero: true, max: 10,
+        position: 'right',
+        grid: { display: false },
+        title: { display: true, text: '代码质量 (1-10)', color: '#fbbf24' }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// 4. T3 项目 GitHub Stars
+new Chart(document.getElementById('chart-stars'), {
+  type: 'bar',
+  indexAxis: 'y',
+  data: {
+    labels: ['OpenClaw (60天)', 'everything-cc', 'Hermes Agent', 'OpenHands', 'AutoResearch (1周)', 'MiroFish (10天)'],
+    datasets: [{
+      label: 'GitHub Stars (千)',
+      data: [355, 185, 153, 68.6, 32.6, 25],
+      backgroundColor: [
+        '#34d399', '#34d399', '#34d399', '#a78bfa', '#34d399', '#34d399'
+      ],
+      borderColor: '#0a0e1a',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a2235',
+        callbacks: {
+          label: (ctx) => ctx.parsed.x + 'k stars'
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        grid: { color: 'rgba(42,58,90,0.5)' },
+        title: { display: true, text: 'GitHub Stars (千)' }
+      },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// === 平滑滚动到锚点时校正 sticky nav 偏移 ===
+document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      const offset = 80;
+      window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+    }
+  });
+});
+</script>
+</body>
+</html>
